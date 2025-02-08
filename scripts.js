@@ -1,11 +1,11 @@
-import OpenAI from "openai";
-import 'dotenv/config'
-
 // Retrieve the API key from the environment (injected by webpack's dotenv plugin)
 const key = process.env.OPENAI_API_KEY;
-const openai = new OpenAI({ 
-  apiKey: key
-});
+
+const url = 'https://api.openai.com/v1/chat/completions';
+const headers = {
+  'Content-Type': 'application/json',
+  'Authorization': `Bearer ${key}`,
+};
 
 // current system prompt for getting what we need from the AI
 const systemPrompt = `You are an expert job recruiter. You will be given a job description and you will return a JSON object with filters as described by this JSON:
@@ -27,31 +27,35 @@ const systemPrompt = `You are an expert job recruiter. You will be given a job d
   commitments: "choose any number (empty for none): career growth, diversity and inclusion, environmental sustainability, social impact, work life balance"
 }`
 
-// given a user prompt return a json object with the filters
-export const getFilterJSON = async (prompt) => {
-  try {
-    // we can assign a system prompt to the chat completion and the insert the user prompt
-    const completeion = await openai.chat.completions.create({
-      model: "gpt-4o",
-      store: true,
-      "messages": [
-        {
-          // need to adjust the system prompt to get exactly what we are looking for
-          "role": "system",
-          "content": systemPrompt
-        },
-        {
-          "role": "user",
-          "content": prompt
-        }
-      ],
-      "response_format": {"type": "json_object"},
-    });
-    // Log the full response for debugging.
-    console.log("OpenAI full response:", completeion);
-    return completeion.choices[0].message.content;
+export const getFilterJSONrequest = async (prompt) => {
+  const data = {
+    "model": "gpt-4o",
+    "store": true,
+    "messages": [
+      {
+        "role": "system",
+        "content": systemPrompt
+      },
+      {
+        "role": "user",
+        "content": prompt
+      }
+    ],
+    "response_format": {"type": "json_object"}
   }
-  catch (error) {
+
+  try {
+    console.log("In Try block")
+    const response = await fetch(url, {
+      method: "POST",
+      headers: headers,
+      body: JSON.stringify(data)
+    });
+    console.log("OpenAI full response: ", response);
+    const completion = await response.json();
+    return completion.choices[0].message.content;
+
+  } catch (error) {
     console.error("Error calling OpenAI: ", error);
     // return the default filters if the call fails
     return ({
@@ -72,8 +76,8 @@ export const getFilterJSON = async (prompt) => {
       "commitments": []
     })
   }
-};
+}
 
 // test out the api call
 // let userPrompt = `I am a 3rd year CS student looking for software developer internships this summer, I want some pretty relevant job postings for entry level internships to gain experience in the work place. Benefits are not that important to me but I do want to be in an environment that harbors growth for its employees. I don't mind the job being remote but I work better in an in-person environment and would like some posting that make it easy for me to apply through linkedin, money is not a big factor for me as I am just looking for some experience.`
-// console.log(await getFilterJSON(userPrompt));
+// console.log(await getFilterJSONrequest(userPrompt));
