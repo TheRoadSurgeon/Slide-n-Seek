@@ -25,16 +25,12 @@ document.addEventListener("DOMContentLoaded", function () {
             const aiFilters = await getFilterJSONrequest(userPrompt);
             console.log("AI Filters:", aiFilters);
 
-            // 2) Send those filters to the content script (which manipulates LinkedIn DOM)
-            chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-                chrome.tabs.sendMessage(
-                tabs[0].id,
-                { type: "APPLY_FILTERS", filters: aiFilters },
-                function (response) {
-                    // Optional: handle response from content script
-                    console.log("Content script response:", response);
-                }
-                );
+            let sortBy = 'DD' ? aiFilters.sortBy == 'recent' : 'R';
+
+            let redirectURL = `https://www.linkedin.com/jobs/search/?keywords=${aiFilters.jobTitle}&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=${sortBy}`;
+
+            chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+                chrome.tabs.update(tabs[0].id, { url: redirectURL });
             });
 
             feedback.textContent = "Filters applied!";
