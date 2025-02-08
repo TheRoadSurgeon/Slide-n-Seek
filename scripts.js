@@ -1,3 +1,5 @@
+import 'dotenv/config'
+
 // Retrieve the API key from the environment (injected by webpack's dotenv plugin)
 const key = process.env.OPENAI_API_KEY;
 
@@ -45,6 +47,7 @@ export const getFilterJSONrequest = async (prompt) => {
   }
 
   try {
+    console.log("In Try block")
     const response = await fetch(url, {
       method: "POST",
       headers: headers,
@@ -78,5 +81,5 @@ export const getFilterJSONrequest = async (prompt) => {
 }
 
 // test out the api call
-// let userPrompt = `I am a 3rd year CS student looking for software developer internships this summer, I want some pretty relevant job postings for entry level internships to gain experience in the work place. Benefits are not that important to me but I do want to be in an environment that harbors growth for its employees. I don't mind the job being remote but I work better in an in-person environment and would like some posting that make it easy for me to apply through linkedin, money is not a big factor for me as I am just looking for some experience.`
-// console.log(await getFilterJSONrequest(userPrompt));
+let userPrompt = `I am a 3rd year CS student looking for software developer internships this summer, I want some pretty relevant job postings for entry level internships to gain experience in the work place. Benefits are not that important to me but I do want to be in an environment that harbors growth for its employees. I don't mind the job being remote but I work better in an in-person environment and would like some posting that make it easy for me to apply through linkedin, money is not a big factor for me as I am just looking for some experience.`
+console.log(await getFilterJSONrequest(userPrompt));

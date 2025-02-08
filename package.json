@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Intuitive filters for finding your dream job on LinkedIn using OpenAI",
   "main": "src/content.js",
+  "type": "module",
   "scripts": {
     "build": "webpack --mode production"
   },

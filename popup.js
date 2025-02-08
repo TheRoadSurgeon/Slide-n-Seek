@@ -26,6 +26,6 @@ function clickAllFiltersButton() {
     // We can query by class or id
     // 1) By class (but note that LinkedIn often changes classes):
     const allFiltersBtnByClass = document.querySelector(
-      "button.search-reusables__all-filters-pill-button"
+        "button.search-reusables__all-filters-pill-button"
     );
 }
