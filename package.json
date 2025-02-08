@@ -1,0 +1,15 @@
+{
+  "name": "slide-n-seek",
+  "version": "1.0.0",
+  "description": "Slide-n-Seek is an intelligent browser extension that transforms LinkedIn’s job search with a sleek, slider-based interface. It consolidates key filters—Salary, Commute, and Experience—into one intuitive panel, providing real-time feedback and dynamic filtering for a streamlined job hunt.",
+  "main": "content.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "openai": "^4.83.0"
+  }
+}
