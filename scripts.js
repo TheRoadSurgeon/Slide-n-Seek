@@ -85,7 +85,7 @@ export const getFilteredURL = async (userPrompt) => {
     "messages": [
       {
         "role": "system",
-        "content": "Can you generate a LinkedIn job search URL for the user based on their desired role? Make sure to pay close attention to what the user wants"
+        "content": "Can you generate a LinkedIn job search URL for the user based on their desired role? Make sure to pay close attention to what the user wants, only return a URL!"
       },
       {
         "role": "user",
