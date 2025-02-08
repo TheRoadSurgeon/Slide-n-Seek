@@ -1,5 +1,5 @@
 // popup.js
-import { getFilterJSONrequest } from "./scripts.js";
+import { getFilterJSONrequest, getFilteredURL } from "./scripts.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const customizeFilterButton = document.getElementById("chat-button");
@@ -22,15 +22,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             // 1) Call OpenAI to get filters
-            const aiFilters = await getFilterJSONrequest(userPrompt);
-            console.log("AI Filters:", aiFilters);
-
-            let sortBy = 'DD' ? aiFilters.sortBy == 'recent' : 'R';
-
-            let redirectURL = `https://www.linkedin.com/jobs/search/?keywords=${aiFilters.jobTitle}&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=${sortBy}`;
+            const aiURL = await getFilteredURL(userPrompt);
+            console.log("AI URL:", aiURL);
 
             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
-                chrome.tabs.update(tabs[0].id, { url: redirectURL });
+                chrome.tabs.update(tabs[0].id, { url: aiURL });
             });
 
             feedback.textContent = "Filters applied!";
