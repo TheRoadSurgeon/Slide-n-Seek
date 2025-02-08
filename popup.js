@@ -19,6 +19,12 @@ const startChainOfEvents = (userPrompt) => {
     feedback.style.color = "#222"
     feedback.textContent = "Working on those filters for you... :)";
     console.log(userPrompt);
+
+    let filterResponse;
+    getFilterJSONrequest(userPrompt).then((response) => {
+        console.log(response);
+        filterResponse = response;
+    });
 };
 
 
