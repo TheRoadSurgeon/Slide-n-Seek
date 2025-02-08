@@ -8,7 +8,7 @@ const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true, });
 async function getFilterValues(prompt) {
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini",
+            model: "gpt-4o",
             store: true,
             messages: [{ role: "user", content: prompt }],
         });
@@ -27,7 +27,7 @@ const getFilterJSON = async (prompt) => {
   try {
     // we can assign a system prompt to the chat completion and the insert the user prompt
     const completeion = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: "gpt-4o",
       store: true,
       "messages": [
         {
