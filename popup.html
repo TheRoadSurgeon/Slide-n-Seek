@@ -1,89 +1,55 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="utf-8">
+        <title>Slide-n-Seek Settings</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
 
-<head>
-    <meta charset="utf-8">
-    <title>Slide-n-Seek Settings</title>
-    <style>
-        body {
-            width: 300px;
-            /* Set desired width */
-            height: 500px;
-            /* Set desired height */
-            margin: 0;
-            padding: 10px;
-            font-family: Arial, sans-serif;
-        }
-    </style>
-</head>
-
-<body>
-    <h2>Slide-n-Seek</h2>
-    <label for="chat-input">Describe your dream job:</label>
-    <input type="text" id="chat-input" placeholder="e.g., Remote Senior Software Engineer"
-        style="width: 275px; padding: 5px; margin-top: 5px;" />
-    <button id="chat-button" style="margin-top: 5px; padding: 5px 10px;">Customize Filters</button>
-    <br><br>
-    <h3>Sort by</h3>
-    <label class="container">
-        <input type="radio" checked="checked" name="radio">
-        <span class="checkmark"></span>
-        <span>Most recent</span>
-    </label>
-    <label class="container">
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-        <span>Most relevant</span>
-    </label>
-    <h3>Date posted</h3>
-    <label class="date-posted">
-        <input type="radio" checked="checked" name="radio">
-        <span class="checkmark"></span>
-        <span>Any time</span>
-    </label>
-    <label class="date-posted">
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-        <span>Past Week</span>
-    </label>
-    <br><br>
-    <label class="date-posted">
-        <input type="radio" checked="checked" name="radio">
-        <span class="checkmark"></span>
-        <span>Past Month</span>
-    </label>
-    <label class="date-posted">
-        <input type="radio" name="radio">
-        <span class="checkmark"></span>
-        <span>Past 24 hours</span>
-    </label>
-    <script src="popup.js"></script>
-
-    <div class="custom-wrapper">
-        <div class="price-input-container">
-            <div class="price-input">
-                <div class="price-field">
-                    <span>Minimum Price</span>
-                    <input type="number" class="min-input" value="2500">
-                </div>
-                <div class="price-field">
-                    <span>Maximum Price</span>
-                    <input type="number" class="max-input" value="8500">
-                </div>
-            </div>
-            <div class="slider-container">
-                <div class="price-slider">
-                </div>
-            </div>
+    <body>
+        <h2>Slide-n-Seek</h2>
+        <div class="filter-generate-filter">
+            <label for="chat-input">Describe your dream job:</label>
+            <input type="text" id="chat-input" placeholder="e.g., Remote Senior Software Engineer" style="width: 275px; padding: 5px; margin-top: 5px;" />
+            <button id="chat-button" style="margin-top: 5px; padding: 5px 10px;">Customize Filters</button>
         </div>
-
-        <!-- Slider -->
-        <div class="range-input">
-            <input type="range" class="min-range" min="0" max="10000" value="2500" step="1">
-            <input type="range" class="max-range" min="0" max="10000" value="8500" step="1">
+        <div class="filter-sort-by">
+            <h3>Sort by</h3>
+            <label class="container">
+                <input type="radio" checked="checked" name="radio">
+                <span class="checkmark"></span>
+                <span>Most recent</span>
+            </label>
+            <label class="container">
+                <input type="radio" name="radio">
+                <span class="checkmark"></span>
+                <span>Most relevant</span>
+            </label>
         </div>
-    </div>
-
-</body>
+        <div class="filter-date-posted">
+            <h3>Date posted</h3>
+            <label class="date-posted-anytime">
+                <input type="radio" checked="checked" name="radio">
+                <span class="checkmark"></span>
+                <span>Any time</span>
+            </label>
+            <label class="date-posted-pastweek">
+                <input type="radio" name="radio">
+                <span class="checkmark"></span>
+                <span>Past Week</span>
+            </label>
+            <label class="date-posted-pastmonth">
+                <input type="radio" checked="checked" name="radio">
+                <span class="checkmark"></span>
+                <span>Past Month</span>
+            </label>
+            <label class="date-posted-past24hours">
+                <input type="radio" name="radio">
+                <span class="checkmark"></span>
+                <span>Past 24 hours</span>
+            </label>
+        </div>
+        <script src="popup.js"></script>
+    </body>
 
 </html>
