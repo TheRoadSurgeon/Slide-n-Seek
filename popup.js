@@ -12,8 +12,10 @@ const startChainOfEvents = (userPrompt) => {
     if (userPrompt == "") {
         feedback.textContent = "I need a prompt before I generate your filters... :)";
         return;
-    } else {
-        feedback.textContent = "Working on those filters for you... :)";
-        console.log(userPrompt);
-    }
+    } 
+
+    feedback.textContent = "Working on those filters for you... :)";
+    console.log(userPrompt);
+
+    
 };

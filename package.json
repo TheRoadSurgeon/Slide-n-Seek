@@ -7,15 +7,16 @@
     "build": "webpack --mode production"
   },
   "dependencies": {
+    "dotenv": "^16.4.7",
     "openai": "^4.83.0"
   },
   "devDependencies": {
-    "webpack": "^5.0.0",
-    "webpack-cli": "^4.0.0",
-    "babel-loader": "^8.0.0",
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "dotenv-webpack": "^8.0.1"
+    "babel-loader": "^8.0.0",
+    "dotenv-webpack": "^8.0.1",
+    "webpack": "^5.0.0",
+    "webpack-cli": "^4.0.0"
   },
   "author": "Your Name",
   "license": "MIT"
