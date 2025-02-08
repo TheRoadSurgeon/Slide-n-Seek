@@ -8,24 +8,116 @@ const headers = {
 };
 
 // current system prompt for getting what we need from the AI
-const systemPrompt = `You are an expert job recruiter. You will be given a job description and you will return a JSON object with filters as described by this JSON:
+const systemPrompt = `You are an expert job recruiter. You will be given a job description and you will return a JSON object with filters as described by this JSON, these are optional JSON keys, only include the ones that are relevant to the user's desires:
 {
   responseType: "accepted",
   jobTitle: "from the prompt extract the most relevant job title to search by for the user as a string",
+  location: "from the prompt extract a location the user specifies if possible",
   sortBy: "choose one: recent, relevant",
   datePosted: "choose one: any time, past month, past week, past 24 hours",
   experienceLevel: "choose any number (empty for none): internship, entry level, associate, mid senior level, director, executive",
   jobType: "choose any number (empty for none): full time, part time, contract, temporary, volunteer, internship",
-  remote: "choose any number (empty for none): on site, hybrid, remote",
-  easyApply: true or false,
+  jobEnvironment: "choose any number (empty for none): on site, hybrid, remote",
+  isEasyApply: true or false,
   hasVerification: true or false,
-  underTenApplicants: true or false,
-  inYourNetwork: true or false,
-  fairChanceEmployer: true or false,
-  salary: "choose one (empty for no preference): $40,000+, $60,000+, $80,000+, $100,000+, $120,000+, $140,000+, $160,000+, $180,000+, $200,000+",
-  benefits: "choose any number (empty for none): medical, vision, dental, 401k, pension, paid maternity leave, paid paternity leave, commuter benefits, student loan assistance, tuition assistance, disability",
-  commitments: "choose any number (empty for none): career growth, diversity and inclusion, environmental sustainability, social impact, work life balance"
+  isUnderTenApplicants: true or false,
+  isInYourNetwork: true or false,
+  isFairChanceEmployer: true or false,
+  student loan assistance, tuition assistance, disability",
 }`
+
+const generateURLPrompt = `
+LinkedIn's search functionality allows users to refine their queries using various URL parameters. These parameters can be combined to create specific searches for jobs, people, companies, and more. Here's an overview of commonly used LinkedIn URL parameters:
+
+Common LinkedIn URL Parameters
+keywords: Specifies the main search terms.
+
+Example: keywords=software%20engineer searches for "software engineer".
+location: Defines the geographic area for the search.
+
+Example: location=New%20York%2C%20NY targets New York, NY.
+f_WT: Filters by workplace type.
+
+Values:
+1: On-site
+2: Remote
+3: Hybrid
+Example: f_WT=2 filters for remote positions.
+f_E: Filters by experience level.
+
+Values:
+1: Internship
+2: Entry-level
+3: Associate
+4: Mid-senior level
+5: Director
+6: Executive
+Example: f_E=2 filters for entry-level positions.
+f_JT: Filters by job type.
+
+Values:
+F: Full-time
+P: Part-time
+C: Contract
+T: Temporary
+V: Volunteer
+I: Internship
+O: Other
+Example: f_JT=F filters for full-time positions.
+f_I: Filters by industry.
+
+Values: Industry codes (e.g., 4 for Accounting, 96 for Computer Software).
+Example: f_I=96 filters for the computer software industry.
+f_C: Filters by company.
+Values: Company IDs.
+Example: f_C=123456 filters for a specific company by its ID.
+f_TPR: Filters by date posted.
+
+Values:
+r259200: Past 3 days
+r604800: Past week
+r1209600: Past 2 weeks
+r2592000: Past month
+Example: f_TPR=r604800 filters for jobs posted in the past week.
+f_LF: Filters by LinkedIn features.
+
+Values:
+f_AL: Under 10 applicants
+f_WT: Easy Apply
+f_SB2: In Your Network
+Example: f_LF=f_AL filters for jobs with under 10 applicants.
+f_PP: Filters by company size.
+
+Values:
+1: 1-10 employees
+2: 11-50 employees
+3: 51-200 employees
+4: 201-500 employees
+5: 501-1,000 employees
+6: 1,001-5,000 employees
+7: 5,001-10,000 employees
+8: 10,001+ employees
+Example: f_PP=3 filters for companies with 51-200 employees.
+f_CF: Filters by company funding.
+
+Values:
+1: Seed
+2: Series A
+3: Series B
+4: Series C+
+5: Public
+Example: f_CF=2 filters for companies with Series A funding.
+f_CR: Filters by company revenue.
+
+Values:
+1: <$1M
+2: $1M-$10M
+3: $10M-$50M
+4: $50M-$100M
+5: $100M-$500M
+
+Generate a job search url for the user given their needs, and ONLY return a URL.
+`
 
 export const getFilterJSONrequest = async (prompt) => {
   const data = {
@@ -65,7 +157,7 @@ export const getFilterJSONrequest = async (prompt) => {
       "datePosted": "anytime",
       "experienceLevel": [],
       "jobType": [],
-      "remote": [],
+      "jobEnvironment": [],
       "easyApply": false,
       "hasVerification": false,
       "underTenApplicants": false,
@@ -78,18 +170,18 @@ export const getFilterJSONrequest = async (prompt) => {
   }
 }
 
-export const getFilteredURL = async (userPrompt) => {
+export const getFilteredURL = async (userFilters) => {
   const data = {
     "model": "gpt-4o",
     "store": true,
     "messages": [
       {
         "role": "system",
-        "content": "Can you generate a LinkedIn job search URL for the user based on their desired role? Make sure to pay close attention to what the user wants"
+        "content": generateURLPrompt
       },
       {
         "role": "user",
-        "content": userPrompt
+        "content": `Generated Filters: ${userFilters}`
       }
     ]
   }
