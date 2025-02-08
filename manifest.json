@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Slide-n-Seek",
+  "version": "1.0",
+  "description": "Intuitive filters for finding your dream job on LinkedIn",
+  "permissions": ["activeTab", "storage", "scripting"],
+  "host_permissions": ["https://www.linkedin.com/jobs/*"],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://www.linkedin.com/jobs/*"],
+      "js": ["content.js"]
+    }
+  ]
+}
