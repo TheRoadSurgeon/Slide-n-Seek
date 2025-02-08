@@ -13,7 +13,7 @@
 body {
   font-family: Arial, sans-serif;
   width: 350px;
-  height: 300px;
+  height: 320px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,10 +21,12 @@ body {
   gap: 20px;
   background-color: var(--background-color);
   border: none;
+  padding-bottom: 20px;
 }
 
 h2 {
-  font-size: 2.5em;
+  font-size: 2.75em;
+  font-weight: 600;
   background-color: var(--primary-color);
   color: var(--secondary-color);
   text-align: center;
@@ -39,6 +41,7 @@ h2 {
   align-items: center;
   justify-content: flex-start;
   gap: 12px;
+  /* margin-top: 20px; */
   width: 100%;
 }
 
@@ -46,25 +49,29 @@ h2 {
   font-size: 1.5em;
 }
 
-.generate-filter input {
-  min-height: 45px;
-  height: auto;
+.generate-filter textarea {
   width: 93%;
-  padding: 0 10px;
+  min-height: 80px;   
   font-size: 1.35em;
-  color: var(--text-color)
+  color: var(--text-color);
+  padding: 10px;
+  resize: vertical;   
+  overflow-y: auto; 
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 .generate-filter button {
   width: 45%;
   height: 35px;
   margin-bottom: 3px;
+  margin-top: 15px;
   border-radius: 5px;
   border: none;
   font-size: 1.3em;
   font-weight: bold;
   background-color: var(--primary-color);
-  color: var(--secondary-color)
+  color: var(--secondary-color);
 }
 
 .generate-filter button:hover {
@@ -83,5 +90,5 @@ h2 {
 p.feedback {
   font-size: 1.25em;
   color: var(--text-color);
-  margin: auto
+  margin: auto;
 }
