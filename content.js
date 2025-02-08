@@ -1,157 +1,83 @@
-import OpenAI from "openai";
+// content.js
 
-// Retrieve the API key from the environment (injected by webpack's dotenv plugin)
-const apiKey = process.env.OPENAI_API_KEY;
-const openai = new OpenAI({ apiKey, dangerouslyAllowBrowser: true, });
+console.log("[Content Script] Slide-n-Seek loaded.");
 
-// Function to call OpenAI with the prompt and return the response message.
-async function getFilterValues(prompt) {
-    try {
-        const completion = await openai.chat.completions.create({
-            model: "gpt-4o",
-            store: true,
-            messages: [{ role: "user", content: prompt }],
-        });
-        // Log the full response for debugging.
-        console.log("OpenAI full response:", completion);
-        return completion.choices[0].message.content;
+// Listen for messages from the popup
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    console.log("[Content Script] onMessage received:", request);
+    if (request.type === "APPLY_FILTERS") {
+        console.log("Received filters from popup:", request.filters);
+        applyFiltersFromAI(request.filters);
+        // send a response back if you want
+        sendResponse({ success: true, message: "Filters attempted" });
     }
-    catch (error) {
-        console.error("Error calling OpenAI:", error);
-        return JSON.stringify({ salary: "60-120", distance: 10, experience: 3 });
+});
+
+// A function to apply all the filter logic from the AI
+function applyFiltersFromAI(aiFilters) {
+    console.log("Applying AI filters:", aiFilters);
+
+    // 1) Open the "All Filters" panel
+    clickAllFiltersButton();
+
+    // 2) Sort By
+    if (aiFilters.sortBy) {
+        console.log("[Content Script] sortBy from AI:", aiFilters.sortBy);
+        applySortByFromAI(aiFilters.sortBy);
+    }
+    else {
+        console.log("[Content Script] No sortBy provided by AI filters");
+    }
+
+  // Then similarly if you want to apply datePosted, experienceLevel, etc...
+  // if (aiFilters.datePosted) { ... }
+  // ...
+}
+
+// Example: sort by "recent" or "relevant"
+function applySortByFromAI(aiValue) {
+    console.log(`[Content Script] applySortByFromAI received: "${aiValue}"`);
+  // The AI might return "recent" or "relevant"
+    let radioValue;
+
+    if (aiValue.toLowerCase() === "recent") {
+        radioValue = "DD";  // LinkedIn's code for "Most recent"
+    } else if (aiValue.toLowerCase() === "relevant") {
+        radioValue = "R";   // LinkedIn's code for "Most relevant"
+    } else {
+        console.warn(`Unknown sortBy value from AI: "${aiValue}"`);
+        return; 
+    }
+
+    setSortBy(radioValue);
+}
+
+function clickAllFiltersButton() {
+    console.log("[Content Script] Attempting to find 'All Filters' button by ID=ember138");
+    // Attempt by ID first
+    const btnById = document.getElementById("ember138");
+    if (btnById) {
+        btnById.click();
+        console.log("Clicked All Filters button by ID: ember138");
+    } else {
+        console.warn("Could not find All Filters button!");
     }
 }
 
-// Initializes the UI on the LinkedIn jobs page.
-function initSlideNSeek() {
-    const container = document.createElement("div");
-    container.id = "slide-n-seek-container";
-    Object.assign(container.style, {
-        position: "fixed",
-        top: "50px",
-        right: "20px",
-        width: "300px",
-        backgroundColor: "#fff",
-        border: "1px solid #ddd",
-        boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-        zIndex: "10000",
-        padding: "10px",
-        fontFamily: "Arial, sans-serif",
-    });
-    container.innerHTML = `<h3 style="margin-top:0;">Slide-n-Seek Filters</h3>`;
+function setSortBy(value) {
+    // value = "DD" (Most recent) or "R" (Most relevant)
+    console.log(`[Content Script] setSortBy called with value "${value}"`);
+    const selector = `input[name="sort-by-filter-value"][value="${value}"]`;
+    const radio = document.querySelector(selector);
 
-    // Chatbot-like input for the dream job description.
-    const chatWrapper = document.createElement("div");
-    chatWrapper.style.marginBottom = "10px";
-    chatWrapper.innerHTML = `
-        <label for="chat-input">Describe your dream job:</label>
-        <input type="text" id="chat-input" placeholder="e.g., Remote Senior Software Engineer" style="width: 100%; padding: 5px; margin-top: 5px;" />
-        <button id="chat-button" style="margin-top: 5px; padding: 5px 10px;">Customize Filters</button>
-    `;
-    container.appendChild(chatWrapper);
-
-    // Helper: Create a slider element with a label and a live value display.
-    function createSlider(labelText, min, max, defaultValue, name) {
-        const wrapper = document.createElement("div");
-        wrapper.style.marginBottom = "10px";
-
-        const label = document.createElement("label");
-        label.textContent = labelText;
-        label.style.display = "block";
-        label.style.marginBottom = "5px";
-        wrapper.appendChild(label);
-
-        const input = document.createElement("input");
-        input.type = "range";
-        input.min = min;
-        input.max = max;
-        input.value = defaultValue;
-        input.name = name;
-        input.style.width = "100%";
-        wrapper.appendChild(input);
-
-        const valueDisplay = document.createElement("span");
-        valueDisplay.textContent = defaultValue;
-        valueDisplay.style.float = "right";
-        valueDisplay.style.fontSize = "12px";
-        wrapper.appendChild(valueDisplay);
-
-        input.addEventListener("input", () => {
-            valueDisplay.textContent = input.value;
-            applyFilters();
-        });
-
-        return wrapper;
+    if (!radio) {
+        console.warn(`Could not find sort-by radio with value="${value}"`);
+        return;
     }
 
-    // Create three demo sliders: Salary, Distance, Experience.
-    const salarySlider = createSlider("Salary ($K)", 30, 200, 60, "salary");
-    const distanceSlider = createSlider("Distance (miles)", 0, 100, 10, "distance");
-    const experienceSlider = createSlider("Experience Level", 0, 10, 3, "experience");
-
-    container.appendChild(salarySlider);
-    container.appendChild(distanceSlider);
-    container.appendChild(experienceSlider);
-    document.body.appendChild(container);
-
-    // When the user clicks the button, call OpenAI and update sliders.
-    document.getElementById("chat-button").addEventListener("click", async () => {
-        const dreamJob = document.getElementById("chat-input").value;
-        if (!dreamJob) return;
-        const prompt = `Based on the dream job description: "${dreamJob}", recommend filter values for a LinkedIn job search. Return a JSON object with keys "salary", "distance", and "experience". For salary, provide a range as "min-max" in thousands (e.g., "60-120"). For distance, provide a number (in miles), and for experience, provide a number between 0 and 10.`;
-        const responseMessage = await getFilterValues(prompt);
-        console.log("OpenAI returned message:", responseMessage);
-        try {
-            const filters = JSON.parse(responseMessage);
-            updateSliders(filters);
-        }
-        catch (e) {
-            console.error("Error parsing OpenAI response:", e);
-            updateSliders({ salary: "60-120", distance: 10, experience: 3 });
-        }
-    });
-}
-
-// Updates slider values based on the filter recommendations.
-function updateSliders(filters) {
-    if (filters.salary) {
-        const [minSalary] = filters.salary.split("-").map((s) => parseInt(s.trim()));
-        const salaryInput = document.querySelector('input[name="salary"]');
-        if (salaryInput) {
-            salaryInput.value = minSalary;
-            salaryInput.dispatchEvent(new Event("input"));
-        }
-    }
-    if (filters.distance) {
-        const distanceInput = document.querySelector('input[name="distance"]');
-        if (distanceInput) {
-            distanceInput.value = filters.distance;
-            distanceInput.dispatchEvent(new Event("input"));
-        }
-    }
-    if (filters.experience) {
-        const experienceInput = document.querySelector('input[name="experience"]');
-        if (experienceInput) {
-            experienceInput.value = filters.experience;
-            experienceInput.dispatchEvent(new Event("input"));
-        }
-    }
-}
-
-// Placeholder function for applying the filters (to be integrated with LinkedIn's job listings).
-function applyFilters() {
-    const salaryVal = document.querySelector('input[name="salary"]').value;
-    const distanceVal = document.querySelector('input[name="distance"]').value;
-    const experienceVal = document.querySelector('input[name="experience"]').value;
-    console.log("Current Filters:", {
-        salary: salaryVal,
-        distance: distanceVal,
-        experience: experienceVal,
-    });
-}
-
-if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initSlideNSeek);
-} else {
-    initSlideNSeek();
+    // Click the radio
+    radio.click();
+    // Dispatch a change event so LinkedIn recognizes the update
+    radio.dispatchEvent(new Event("change", { bubbles: true }));
+    console.log(`Sort By set to "${value === "DD" ? "Most recent" : "Most relevant"}"`);
 }
