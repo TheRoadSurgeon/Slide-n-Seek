@@ -21,13 +21,46 @@ document.addEventListener("DOMContentLoaded", function () {
         console.log("User prompt:", userPrompt);
 
         try {
-            // 1) Call OpenAI to get filters
-            const aiFilters = await getFilterJSONrequest(userPrompt);
-            console.log("AI Filters:", aiFilters);
+            // 1) Call OpenAI to get filters (returns a JSON string)
+            const aiFiltersRaw = await getFilterJSONrequest(userPrompt);
+            console.log("[Popup] Raw AI Filters (string):", aiFiltersRaw);
 
-            let sortBy = 'DD' ? aiFilters.sortBy == 'recent' : 'R';
+            // 2) Parse the string into an object
+            let aiFilters;
+            try {
+                aiFilters = JSON.parse(aiFiltersRaw);
+            } catch (parseErr) {
+                console.error("[Popup] Error parsing AI Filters:", parseErr);
+                aiFilters = {
+                    responseType: "error",
+                    jobTitle: "Janitor",
+                    sortBy: "recent",
+                    datePosted: "anytime",
+                    experienceLevel: [],
+                    jobType: [],
+                    remote: [],
+                    easyApply: false,
+                    hasVerification: false,
+                    underTenApplicants: false,
+                    inYourNetwork: false,
+                    fairChanceEmployer: false,
+                    salary: "",
+                    benefits: [],
+                    commitments: [],
+                };
+            }
 
-            let redirectURL = `https://www.linkedin.com/jobs/search/?keywords=${aiFilters.jobTitle}&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=${sortBy}`;
+            console.log("[Popup] Parsed AI Filters (object):", aiFilters);
+
+            // 3) Build your redirect URL
+            // Use a ternary to convert 'recent' -> 'DD', 'relevant' -> 'R'
+            // Also, encode the job title in case it has spaces
+            const sortByValue = (aiFilters.sortBy === "recent") ? "DD" : "R";
+            const jobTitleEncoded = encodeURIComponent(aiFilters.jobTitle || "");
+            
+            let redirectURL = `https://www.linkedin.com/jobs/search/?keywords=${jobTitleEncoded}&origin=JOB_SEARCH_PAGE_JOB_FILTER&refresh=true&sortBy=${sortByValue}`;
+
+            console.log("[Popup] Navigating to:", redirectURL);
 
             chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
                 chrome.tabs.update(tabs[0].id, { url: redirectURL });
