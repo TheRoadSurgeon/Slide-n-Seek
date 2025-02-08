@@ -2,7 +2,7 @@
   --primary-color: #0a66b2;
   --secondary-color: #fff;
   --text-color: #222;
-  --background-color: #f4f4f4;
+  --background-color: #f4f2ee;
 }
 
 * {
@@ -12,20 +12,25 @@
 
 body {
   font-family: Arial, sans-serif;
-  width: 300px;
-  height: 500px;
-  padding: 10px;
+  width: 350px;
+  height: 300px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 15px;
+  gap: 20px;
   background-color: var(--background-color);
+  border: none;
 }
 
 h2 {
   font-size: 2.5em;
-  margin: 0.2em 0;
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+  text-align: center;
+  padding: 13px;
+  width: 100%;
+  box-shadow: 0px 4px 7px rgba(0, 0, 0, 0.25)
 }
 
 .generate-filter {
@@ -33,7 +38,7 @@ h2 {
   flex-direction: column;
   align-items: center;
   justify-content: flex-start;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
 }
 
@@ -44,9 +49,10 @@ h2 {
 .generate-filter input {
   min-height: 45px;
   height: auto;
-  width: 95%;
+  width: 93%;
   padding: 0 10px;
   font-size: 1.35em;
+  color: var(--text-color)
 }
 
 .generate-filter button {
@@ -54,4 +60,19 @@ h2 {
   height: 35px;
   border-radius: 5px;
   border: none;
+  font-size: 1.3em;
+  font-weight: bold;
+  background-color: var(--primary-color);
+  color: var(--secondary-color)
+}
+
+.generate-filter button:hover {
+  cursor: pointer;
+  width: 46%;
+  height: 36px;
+}
+
+.generate-filter button:active {
+  width: 44%;
+  height: 33px;
 }
