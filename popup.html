@@ -19,6 +19,40 @@
         <label for="chat-input">Describe your dream job:</label>
         <input type="text" id="chat-input" placeholder="e.g., Remote Senior Software Engineer" style="width: 275px; padding: 5px; margin-top: 5px;" />
         <button id="chat-button" style="margin-top: 5px; padding: 5px 10px;">Customize Filters</button>
+        <br><br>
+        <h3>Sort by</h3>
+        <label class="container">
+            <input type="radio" checked="checked" name="radio">
+            <span class="checkmark"></span>
+            <span>Most recent</span>
+        </label>
+        <label class="container">
+            <input type="radio" name="radio">
+            <span class="checkmark"></span>
+            <span>Most relevant</span>
+        </label>
+        <h3>Date posted</h3>
+        <label class="date-posted">
+            <input type="radio" checked="checked" name="radio">
+            <span class="checkmark"></span>
+            <span>Any time</span>
+        </label>
+        <label class="date-posted">
+            <input type="radio" name="radio">
+            <span class="checkmark"></span>
+            <span>Past Week</span>
+        </label>
+        <br><br>
+        <label class="date-posted">
+            <input type="radio" checked="checked" name="radio">
+            <span class="checkmark"></span>
+            <span>Past Month</span>
+        </label>
+        <label class="date-posted">
+            <input type="radio" name="radio">
+            <span class="checkmark"></span>
+            <span>Past 24 hours</span>
+        </label>
         <script src="popup.js"></script>
     </body>
 
