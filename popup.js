@@ -1,4 +1,4 @@
-import { getFilterJSON } from "./scripts.js";
+import { getFilterJSONrequest } from "./scripts.js";
 
 document.addEventListener("DOMContentLoaded", function () {
     const customizeFilterButton = document.getElementById("chat-button");

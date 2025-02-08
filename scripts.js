@@ -1,5 +1,3 @@
-import 'dotenv/config'
-
 // Retrieve the API key from the environment (injected by webpack's dotenv plugin)
 const key = process.env.OPENAI_API_KEY;
 
