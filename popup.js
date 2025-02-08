@@ -1,3 +1,5 @@
+import { getFilterJSON } from "./scripts.js";
+
 document.addEventListener("DOMContentLoaded", function () {
     const customizeFilterButton = document.getElementById("chat-button");
 
@@ -16,6 +18,13 @@ const startChainOfEvents = (userPrompt) => {
 
     feedback.textContent = "Working on those filters for you... :)";
     console.log(userPrompt);
-
-    
 };
+
+
+function clickAllFiltersButton() {
+    // We can query by class or id
+    // 1) By class (but note that LinkedIn often changes classes):
+    const allFiltersBtnByClass = document.querySelector(
+      "button.search-reusables__all-filters-pill-button"
+    );
+}
