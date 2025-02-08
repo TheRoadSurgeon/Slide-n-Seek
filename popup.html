@@ -5,17 +5,20 @@
         <title>Slide-n-Seek Settings</title>
         <style>
             body {
-                font-family: Arial, sans-serif;
+                width: 300px;  /* Set desired width */
+                height: 500px; /* Set desired height */
+                margin: 0;
                 padding: 10px;
+                font-family: Arial, sans-serif;
             }
         </style>
     </head>
 
     <body>
         <h2>Slide-n-Seek</h2>
-        <label>
-            <input type="checkbox" id="enableExtension" /> Enable Slide-n-Seek
-        </label>
+        <label for="chat-input">Describe your dream job:</label>
+        <input type="text" id="chat-input" placeholder="e.g., Remote Senior Software Engineer" style="width: 275px; padding: 5px; margin-top: 5px;" />
+        <button id="chat-button" style="margin-top: 5px; padding: 5px 10px;">Customize Filters</button>
         <script src="popup.js"></script>
     </body>
 
