@@ -1,4 +1,4 @@
-# Slide-n-Seek
+# FilterGenie
 
 Slide-n-Seek is an intelligent browser extension that transforms LinkedIn’s job search with a sleek interface to help you slide your applications into some inboxes. It consolidates key filters to make sure you don't have to apply them yourselves, be as specific as you can and Slide-n-Seek will help you find your dream job!
 
