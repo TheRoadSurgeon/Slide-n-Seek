@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Slide-n-Seek",
+  "name": "FilterGenie",
   "version": "1.0",
   "description": "Intuitive filters for finding your dream job on LinkedIn with an AI chatbot",
   "permissions": ["activeTab", "storage", "scripting"],
